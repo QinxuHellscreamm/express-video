@@ -4,7 +4,7 @@ const {hotInc, topHots} = require('../model/redis/redisHotsinc')
 exports.list = async (req,res)=>{
     console.log(req.query);
     let {pageNum = 1,pageSize = 10} = req.query
-    console.log(pageNum);
+    // console.log(pageNum);
     const videoList = await Video.find()
         .skip((pageNum-1) * pageSize)
         .limit(pageSize)
@@ -15,9 +15,10 @@ exports.list = async (req,res)=>{
 }
 exports.createVideo = async (req,res) =>{
     let body = req.body
-    console.log(req.user);
+    // console.log(req.user);
     body.user = req.user.userinfo._id
-    const videoMoedl = new Video(body)
+    // console.log({...body,...req.vod})
+    const videoMoedl = new Video({...body,...req.vod})
     try {
         const dbBack = await videoMoedl.save()
         res.status(200).json(dbBack)
@@ -27,8 +28,6 @@ exports.createVideo = async (req,res) =>{
 }
 exports.video = async (req,res) =>{
     const videoId = req.params.videoId
-    console.log(videoId);
-
     try{
         const videoDetail = await Video.findById(videoId).populate('user','_id,image username')
         if(req.user.userinfo){

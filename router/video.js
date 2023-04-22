@@ -7,7 +7,7 @@ const validator = require('../middleware/validator/videoValidator')
 router
     .get('/list',videoController.list)
     .get('/getvod',vodController.getvod)
-    .post('/createVideo',verfiyToken(),validator.video,videoController.createVideo)
+    .post('/createVideo',verfiyToken(),validator.video,vodController.createVideo,videoController.createVideo)
     .get('/video/:videoId',verfiyToken(),videoController.video)
     .post('/videoComment/:videoId',verfiyToken(),videoController.comment)
     .get('/videoCommentList/:videoId',videoController.commentList)
