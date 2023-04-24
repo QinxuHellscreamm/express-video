@@ -13,10 +13,6 @@ const videoSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    playUrl:{
-        type: String,
-        required: true
-    },
     user:{
         type: mongoose.ObjectId,
         required:true,

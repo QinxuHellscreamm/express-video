@@ -20,18 +20,35 @@ exports.getvod = async (req,res)=>{
     res.status(200).json({vod:vodBack})
 }
 
-exports.createVideo= async (req,res,next) =>{
+exports.getvodUrl= async (req,res) =>{
     const client = initVodClient('LTAI5tMfyw7z61HYEok2t6vm','f71FivvPjhq8H9EVDTzXt5Q9wv9QaR');
     const requestOption = {
         method: 'POST',
         formatParams: false,
     };
-    client.request('GetPlayInfo', {"VideoId": req.body.vodVideoId}, requestOption).then((result) => {
-        console.log('result',JSON.stringify(result));
-        req.vod = {cover:result.VideoBase.CoverURL,playUrl:result.PlayInfoList.PlayInfo[0].PlayURL}
-        next()
-    }, (ex) => {
-        console.log('ex',ex);
-    })
-    console.log(req);
+    if(req.videoList){
+        const len = req.videoList.length
+        let count = 0
+        req.videoList.forEach((item,i)=>{
+            client.request('GetPlayInfo', {"VideoId": item.vodVideoId}, requestOption).then((result) => {
+                console.log('result',JSON.stringify(result));
+                req.videoList[count].cover = result.VideoBase.CoverURL
+                req.videoList[count].playUrl = result.PlayInfoList.PlayInfo[0].PlayURL
+                count ++
+                if(count == len){
+                    res.status(200).json({videoList:req.videoList,videoCount:req.videoCount})
+                }
+            }, (ex) => {
+                console.log('ex',ex);
+            })
+        })
+    }
+    // client.request('GetPlayInfo', {"VideoId": req.body.vodVideoId}, requestOption).then((result) => {
+    //     console.log('result',JSON.stringify(result));
+    //     req.vod = {cover:result.VideoBase.CoverURL,playUrl:result.PlayInfoList.PlayInfo[0].PlayURL}
+    //     next()
+    // }, (ex) => {
+    //     console.log('ex',ex);
+    // })
+    // console.log(req);
 }

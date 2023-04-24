@@ -1,7 +1,8 @@
 const {Video,videoComment,videoLike,collectModel} = require('../model/index')
 const {video} = require("../middleware/validator/videoValidator");
 const {hotInc, topHots} = require('../model/redis/redisHotsinc')
-exports.list = async (req,res)=>{
+const {next} = require("lodash/seq");
+exports.list = async (req,res,next)=>{
     console.log(req.query);
     let {pageNum = 1,pageSize = 10} = req.query
     // console.log(pageNum);
@@ -10,8 +11,12 @@ exports.list = async (req,res)=>{
         .limit(pageSize)
         .sort({creatAt: -1})
         .populate('user')
+
     const videoCount = await Video.countDocuments()
-    res.status(200).json({videoList,videoCount})
+    req.videoList = videoList
+    req.videoCount = videoCount
+    next()
+    // res.status(200).json({videoList,videoCount})
 }
 exports.createVideo = async (req,res) =>{
     let body = req.body
