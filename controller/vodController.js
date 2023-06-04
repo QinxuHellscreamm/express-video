@@ -32,8 +32,8 @@ exports.getvodUrl= async (req,res) =>{
         req.videoList.forEach((item,i)=>{
             client.request('GetPlayInfo', {"VideoId": item.vodVideoId}, requestOption).then((result) => {
                 console.log('result',JSON.stringify(result));
-                req.videoList[count].cover = result.VideoBase.CoverURL
-                req.videoList[count].playUrl = result.PlayInfoList.PlayInfo[0].PlayURL
+                item.cover = result.VideoBase.CoverURL
+                item.playUrl = result.PlayInfoList.PlayInfo[0].PlayURL
                 count ++
                 if(count == len){
                     res.status(200).json({videoList:req.videoList,videoCount:req.videoCount})
