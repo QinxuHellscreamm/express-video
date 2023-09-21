@@ -6,7 +6,7 @@ const { verfiyToken } = require('../util/jwt')
 const validator = require('../middleware/validator/videoValidator')
 router
     .get('/list',videoController.list,vodController.getvodUrl)
-    .get('/getvod',vodController.getvod)
+    .get('/getvod',vodController.getvod,vodController.getvodUrl)
     .post('/createVideo',verfiyToken(),validator.video,videoController.createVideo)
     .get('/video/:videoId',verfiyToken(),videoController.video)
     .post('/videoComment/:videoId',verfiyToken(),videoController.comment)
